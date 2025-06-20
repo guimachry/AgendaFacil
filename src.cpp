@@ -1,7 +1,5 @@
 #include <stdio.h>
 
-
-
 typedef struct{
 	int quantidade_pessoas;
 	int quantidade_horarios;
@@ -27,7 +25,7 @@ void CadastrarPessoas(Dados *dados){
 	
 	
 	for(int i = 0; i < dados->quantidade_pessoas; i++){
-		printf("informe nome %d :  ", i +1);
+		printf("informe nome %d, use ( _ ) para espacos do nome :  ", i +1);
 		scanf("%s", dados->pessoas[i]);
 	}
 	
@@ -117,8 +115,33 @@ void registrarDisponibilidade(Dados *dados, int disponibilidade[100][20]){
 		
 }
 
-void processarDisponibilidade(){
-	
+void processarDisponibilidade(Dados *dados, int disponibilidade[100][20]){
+		// este vetor vai auxiliar a contar cada horario
+		int contagem[100] = {0};
+		
+		// esse duplo laço percorre a matriz e diz pra quais
+		// horarios individual tem pessoas disponiveis
+		for(int i = 0; i < dados->quantidade_horarios; i++){
+			for(int j = 0; j < dados->quantidade_pessoas; i++){
+					if(disponibilidade[i][j] == 1){
+						contagem[j]++;
+					}
+			}
+		}
+		
+		int valor_maximo = 0;
+		for(int i = 0; i < dados->quantidade_horarios; i++){
+			if(contagem[i] > valor_maximo ){
+				valor_maximo = contagem[i];
+			}
+		}
+		
+		printf("Melhores horaios com %d participantes : \n", valor_maximo);
+		for(int j = 0; j < dados->quantidade_horarios; j++){
+			if(contagem[j] == valor_maximo){
+				printf(" %d horas", dados->horarios[j]);
+			}
+		}	
 }
 
 void exibirMelhoresHorarios(){
@@ -136,6 +159,7 @@ int main(){
 	CadastrarPessoas(&dados);
 	cadastrarHorarios(&dados);
 	registrarDisponibilidade(&dados, disponibilidade);
+	processarDisponibilidade(&dados, disponibilidade);
 	
 	
 }
